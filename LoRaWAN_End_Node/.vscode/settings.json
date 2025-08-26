@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "loramac.h": "c",
+        "sys_app.h": "c"
+    }
+}

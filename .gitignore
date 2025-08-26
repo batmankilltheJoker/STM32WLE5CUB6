@@ -1,0 +1,45 @@
+# keil
+*.o
+*.d
+*.s
+*.rar
+*.crf
+*.htm
+*.dep
+*.map
+*.bak
+*.lnp
+*.lst
+*.ini
+*.iex
+*.sct
+*.scvd
+*.uvguix
+*.dbg*
+*.uvguix.*
+.mxproject
+*.uvoptx
+
+# 提交的文件
+!*.uvprojx
+!*.h
+!*.c
+!*.ioc
+!*.axf
+!*.bin
+!*.hex
+
+# HAL
+*.log
+
+
+# JLINK file
+JLinkLog.txt
+JLinkSettings.ini
+*.dbgconf
+
+# 其他
+*.pdf
+*.zip
+*.docx
+

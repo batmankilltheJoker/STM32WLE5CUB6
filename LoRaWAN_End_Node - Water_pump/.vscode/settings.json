@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "loramac.h": "c",
+        "waterpump.h": "c"
+    }
+}
