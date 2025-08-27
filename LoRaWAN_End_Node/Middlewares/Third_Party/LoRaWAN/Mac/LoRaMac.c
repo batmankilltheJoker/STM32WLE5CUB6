@@ -56,7 +56,7 @@
 
 #include "LoRaMac.h"
 #include "mw_log_conf.h"
-#include "stm32wlxx_hal.h"
+
 #if (defined( LORAMAC_VERSION ) && (( LORAMAC_VERSION == 0x01000300 ) || ( LORAMAC_VERSION == 0x01000400 )))
 #else
 #error LORAMAC_VERSION not valid
@@ -871,20 +871,18 @@ struct
     int8_t Snr;
 }RxDoneParams;
 
-static void OnRadioTxDone( void )   // 发送完成回调
+static void OnRadioTxDone( void )
 {
     TxDoneParams.CurTime = TimerGetCurrentTime( );
     MacCtx.LastTxSysTime = SysTimeGet( );
 
-    LoRaMacRadioEvents.Events.TxDone = 1;   // 标志位 置1
+    LoRaMacRadioEvents.Events.TxDone = 1;
 
     if( ( MacCtx.MacCallbacks != NULL ) && ( MacCtx.MacCallbacks->MacProcessNotify != NULL ) )
     {
         MacCtx.MacCallbacks->MacProcessNotify( );
     }
     MW_LOG(TS_ON, VLEVEL_M, "MAC txDone\r\n" );
-
-    // 转到 -> ProcessRadioTxDone
 }
 
 static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
@@ -928,7 +926,7 @@ static void OnRadioRxError( void )
     }
 }
 
-static void OnRadioRxTimeout( void )    // 接收回调超时
+static void OnRadioRxTimeout( void )
 {
     LoRaMacRadioEvents.Events.RxTimeout = 1;
 
@@ -963,9 +961,9 @@ static void ProcessRadioTxDone( void )
     }
 #if ( !defined(DISABLE_LORAWAN_RX_WINDOW) || (DISABLE_LORAWAN_RX_WINDOW == 0) )
     // Setup timers
-    TimerSetValue( &MacCtx.RxWindowTimer1, MacCtx.RxWindow1Delay );	// 直接设置	 MacCtx.RxWindow1Delay = 1s
+    TimerSetValue( &MacCtx.RxWindowTimer1, MacCtx.RxWindow1Delay );
     TimerStart( &MacCtx.RxWindowTimer1 );
-    TimerSetValue( &MacCtx.RxWindowTimer2, MacCtx.RxWindow2Delay );	// 直接设置	 MacCtx.RxWindow1Delay = 5s
+    TimerSetValue( &MacCtx.RxWindowTimer2, MacCtx.RxWindow2Delay );
     TimerStart( &MacCtx.RxWindowTimer2 );
 #else
     if (Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE)
@@ -1618,7 +1616,7 @@ static void ProcessRadioTxTimeout( void )
 static void HandleRadioRxErrorTimeout( LoRaMacEventInfoStatus_t rx1EventInfoStatus, LoRaMacEventInfoStatus_t rx2EventInfoStatus )
 {
     bool classBRx = false;
-	uint32_t elapsedtime = 0;
+
     if( Nvm.MacGroup2.DeviceClass != CLASS_C )
     {
         Radio.Sleep( );
@@ -1655,9 +1653,8 @@ static void HandleRadioRxErrorTimeout( LoRaMacEventInfoStatus_t rx1EventInfoStat
                 MacCtx.McpsConfirm.Status = rx1EventInfoStatus;
             }
             LoRaMacConfirmQueueSetStatusCmn( rx1EventInfoStatus );
-			elapsedtime = TimerGetElapsedTime( Nvm.MacGroup1.LastTxDoneTime );
-            // 如果在 Rx1 超时时刻已经超过 RxWindow2Delay（TimerGetElapsedTime >= RxWindow2Delay），代码会直接停止 RxWindowTimer2
-            if( elapsedtime >= MacCtx.RxWindow2Delay )	// ！！！！！重点
+
+            if( TimerGetElapsedTime( Nvm.MacGroup1.LastTxDoneTime ) >= MacCtx.RxWindow2Delay )
             {
                 TimerStop( &MacCtx.RxWindowTimer2 );
                 MacCtx.MacFlags.Bits.MacDone = 1;
@@ -2165,10 +2162,9 @@ static void OnRxWindow2TimerEvent( void* context )
 {
     // Check if we are processing Rx1 window.
     // If yes, we don't setup the Rx2 window.
-    if( MacCtx.RxSlot == RX_SLOT_WIN_1 )	// 直接return
+    if( MacCtx.RxSlot == RX_SLOT_WIN_1 )
     {
-			//Radio.Standby(); // 直接强制停止RX_SLOT_WIN_1
-//      return;
+        return;
     }
     MacCtx.RxWindow2Config.Channel = MacCtx.Channel;
     MacCtx.RxWindow2Config.Frequency = Nvm.MacGroup2.MacParams.Rx2Channel.Frequency;
@@ -3089,13 +3085,13 @@ static void ComputeRxWindowParameters( void )
                                      &MacCtx.RxWindow2Config );
 
     // Default setup, in case the device joined
-    MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset;	// 1000 + 29
-    MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset;	// 2000 + 29
+    MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset;
+    MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset;
 
     if( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE )
     {
-        MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay1 + MacCtx.RxWindow1Config.WindowOffset;	// 5000 + 29
-        MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay2 + MacCtx.RxWindow2Config.WindowOffset;	// 6000 + 29
+        MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay1 + MacCtx.RxWindow1Config.WindowOffset;
+        MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay2 + MacCtx.RxWindow2Config.WindowOffset;
     }
 }
 
@@ -3211,7 +3207,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
     }
 
     // Compute window parameters, offsets, rx symbols, system errors etc.
-    ComputeRxWindowParameters( );	// 启动接收窗口
+    ComputeRxWindowParameters( );
 
     // Verify TX frame
     status = VerifyTxFrame( );
@@ -3410,14 +3406,12 @@ static void RxWindowSetup( TimerEvent_t* rxTimer, RxConfigParams_t* rxConfig )
 
     // Ensure the radio is Idle
     Radio.Standby( );
-		//MW_LOG(TS_ON, VLEVEL_M ,"Receive channel: %d\n\r", rxConfig->RxSlot );	// 0为通道1， 1 为通道2
+
     if( RegionRxConfig( Nvm.MacGroup2.Region, rxConfig, ( int8_t* )&MacCtx.McpsIndication.RxDatarate ) == true )
     {
         MacCtx.MlmeIndication.RxDatarate = MacCtx.McpsIndication.RxDatarate;
-        //MW_LOG(TS_ON, VLEVEL_M ,"Nvm.MacGroup2.MacParams.MaxRxWindow %d\n\r", Nvm.MacGroup2.MacParams.MaxRxWindow );
-        Radio.Rx( Nvm.MacGroup2.MacParams.MaxRxWindow );    // 开始接收 监听3000ms
+        Radio.Rx( Nvm.MacGroup2.MacParams.MaxRxWindow );
         MacCtx.RxSlot = rxConfig->RxSlot;
-				//MW_LOG(TS_ON, VLEVEL_M ,"Change Receive channel: %d\n\r", rxConfig->RxSlot );
     }
 }
 
@@ -3621,7 +3615,7 @@ static LoRaMacStatus_t SendFrameOnChannel( uint8_t channel )
     MacCtx.McpsConfirm.NbTrans = MacCtx.ChannelsNbTransCounter;
     MacCtx.ResponseTimeoutStartTime = 0;
 #endif /* LORAMAC_VERSION */
-		HAL_Delay(100);	// 延迟发送
+
     // Send now
     Radio.Send( MacCtx.PktBuffer, MacCtx.PktBufferLen );
 
@@ -4140,8 +4134,8 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
 
     // Initialize timers
     TimerInit( &MacCtx.TxDelayedTimer, OnTxDelayedTimerEvent );
-    TimerInit( &MacCtx.RxWindowTimer1, OnRxWindow1TimerEvent );	// 配置接收通道1
-    TimerInit( &MacCtx.RxWindowTimer2, OnRxWindow2TimerEvent );	// 配置接收通道2
+    TimerInit( &MacCtx.RxWindowTimer1, OnRxWindow1TimerEvent );
+    TimerInit( &MacCtx.RxWindowTimer2, OnRxWindow2TimerEvent );
 #if ( defined( LORAMAC_VERSION ) && ( LORAMAC_VERSION == 0x01000300 ))
     TimerInit( &MacCtx.AckTimeoutTimer, OnAckTimeoutTimerEvent );
 #elif ( defined( LORAMAC_VERSION ) && ( LORAMAC_VERSION == 0x01000400 ))

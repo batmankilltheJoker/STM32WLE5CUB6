@@ -687,13 +687,13 @@ static void RadioInit( RadioEvents_t *events )
     SUBGRF_SetDioIrqParams( IRQ_RADIO_ALL, IRQ_RADIO_ALL, IRQ_RADIO_NONE, IRQ_RADIO_NONE );
 
     /* ST_WORKAROUND_BEGIN: Sleep radio */
-    RadioSleep();
+//    RadioSleep();
     /* ST_WORKAROUND_END */
     // Initialize driver timeout timers
-    TimerInit( &TxTimeoutTimer, RadioOnTxTimeoutIrq );
-    TimerInit( &RxTimeoutTimer, RadioOnRxTimeoutIrq );
-    TimerStop( &TxTimeoutTimer );
-    TimerStop( &RxTimeoutTimer );
+//    TimerInit( &TxTimeoutTimer, RadioOnTxTimeoutIrq );
+//    TimerInit( &RxTimeoutTimer, RadioOnRxTimeoutIrq );
+//    TimerStop( &TxTimeoutTimer );
+//    TimerStop( &RxTimeoutTimer );
 }
 
 static RadioState_t RadioGetStatus( void )
@@ -1368,8 +1368,8 @@ static void RadioSend( uint8_t *buffer, uint8_t size )
             break;
     }
 
-    TimerSetValue( &TxTimeoutTimer, SubgRf.TxTimeout );
-    TimerStart( &TxTimeoutTimer );
+//    TimerSetValue( &TxTimeoutTimer, SubgRf.TxTimeout );
+//    TimerStart( &TxTimeoutTimer );
 }
 
 static void RadioSleep( void )
@@ -1403,8 +1403,8 @@ static void RadioRx( uint32_t timeout )
 
     if( timeout != 0 )
     {
-        TimerSetValue( &RxTimeoutTimer, timeout );
-        TimerStart( &RxTimeoutTimer );
+//        TimerSetValue( &RxTimeoutTimer, timeout );
+//        TimerStart( &RxTimeoutTimer );
     }
     /* ST_WORKAROUND_BEGIN : Set the debug pin and update the radio switch */
     /* switch off RxDcPreambleDetect See STM32WL Errata: RadioSetRxDutyCycle*/
@@ -1440,8 +1440,8 @@ static void RadioRxBoosted( uint32_t timeout )
     }
     if( timeout != 0 )
     {
-        TimerSetValue( &RxTimeoutTimer, timeout );
-        TimerStart( &RxTimeoutTimer );
+//        TimerSetValue( &RxTimeoutTimer, timeout );
+//        TimerStart( &RxTimeoutTimer );
     }
     /* ST_WORKAROUND_BEGIN : Set the debug pin and update the radio switch */
     /* switch off RxDcPreambleDetect See STM32WL Errata: RadioSetRxDutyCycle*/
@@ -1500,8 +1500,8 @@ static void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time
 
     SUBGRF_SetTxContinuousWave( );
 
-    TimerSetValue( &TxTimeoutTimer, timeout );
-    TimerStart( &TxTimeoutTimer );
+//    TimerSetValue( &TxTimeoutTimer, timeout );
+//    TimerStart( &TxTimeoutTimer );
 }
 
 static int16_t RadioRssi( RadioModems_t modem )
@@ -1623,7 +1623,7 @@ static void RadioIrqProcess( void )
         DBG_GPIO_RADIO_TX( RST );
         /* ST_WORKAROUND_END */
 
-        TimerStop( &TxTimeoutTimer );
+//        TimerStop( &TxTimeoutTimer );
         //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
         SUBGRF_SetStandby( STDBY_RC );
 
@@ -1643,7 +1643,7 @@ static void RadioIrqProcess( void )
         DBG_GPIO_RADIO_RX( RST );
         /* ST_WORKAROUND_END */
 
-        TimerStop( &RxTimeoutTimer );
+//        TimerStop( &RxTimeoutTimer );
         if( SubgRf.RxContinuous == false )
         {
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
@@ -1696,7 +1696,7 @@ static void RadioIrqProcess( void )
             DBG_GPIO_RADIO_TX( RST );
             /* ST_WORKAROUND_END */
 
-            TimerStop( &TxTimeoutTimer );
+//            TimerStop( &TxTimeoutTimer );
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SUBGRF_SetStandby( STDBY_RC );
             if( ( RadioEvents != NULL ) && ( RadioEvents->TxTimeout != NULL ) )
@@ -1710,7 +1710,7 @@ static void RadioIrqProcess( void )
             DBG_GPIO_RADIO_RX( RST );
             /* ST_WORKAROUND_END */
 
-            TimerStop( &RxTimeoutTimer );
+//            TimerStop( &RxTimeoutTimer );
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC
             SUBGRF_SetStandby( STDBY_RC );
             if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
@@ -1752,7 +1752,7 @@ static void RadioIrqProcess( void )
         break;
 
     case IRQ_HEADER_ERROR:
-        TimerStop( &RxTimeoutTimer );
+//        TimerStop( &RxTimeoutTimer );
         if( SubgRf.RxContinuous == false )
         {
             //!< Update operating mode state to a value lower than \ref MODE_STDBY_XOSC

@@ -154,7 +154,7 @@ extern "C"
 /*!
  * Maximum RX window duration
  */
-#define CN470_MAX_RX_WINDOW                         1000    // 默认监听时间 3000
+#define CN470_MAX_RX_WINDOW                         3000
 
 #if (defined( REGION_VERSION ) && ( REGION_VERSION == 0x01010003 ))
 /*!

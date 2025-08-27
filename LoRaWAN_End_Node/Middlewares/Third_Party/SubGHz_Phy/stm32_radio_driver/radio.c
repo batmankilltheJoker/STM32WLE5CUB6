@@ -38,7 +38,7 @@
 #include "radio_driver.h"
 #include "radio_conf.h"
 #include "mw_log_conf.h"
-#include "sys_app.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* ST_WORKAROUND_BEGIN: Replace global variables by typedef struct */
 /*!
@@ -764,8 +764,6 @@ static void RadioSetModem( RadioModems_t modem )
 
 static void RadioSetChannel( uint32_t freq )
 {
-		uint32_t test = freq;
-		MW_LOG(TS_ON, VLEVEL_M, "RadioSetChannel: %d\r\n", freq);
     SUBGRF_SetRfFrequency( freq );
 }
 
@@ -832,7 +830,6 @@ static void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
 #if (RADIO_SIGFOX_ENABLE == 1)
     uint8_t modReg;
 #endif
-		
     SubgRf.RxContinuous = rxContinuous;
     RFW_DeInit(); /* ST_WORKAROUND: Switch Off FwPacketDecoding by default */
     if( rxContinuous == true )
@@ -1268,10 +1265,6 @@ static uint32_t RadioTimeOnAir( RadioModems_t modem, uint32_t bandwidth,
 
 static void RadioSend( uint8_t *buffer, uint8_t size )
 {
-    for (uint8_t i = 0; i < size; i++) {
-        APP_LOG(TS_OFF, VLEVEL_M,"%02X ", buffer[i]);
-    }
-    APP_LOG(TS_OFF, VLEVEL_M,"\r\n");
     /* ST_WORKAROUND_BEGIN : Set the debug pin and update the radio switch */
     SUBGRF_SetDioIrqParams( IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_TX_DBG,
                             IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_TX_DBG,

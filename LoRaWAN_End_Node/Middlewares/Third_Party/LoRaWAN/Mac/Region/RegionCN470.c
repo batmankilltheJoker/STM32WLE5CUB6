@@ -430,7 +430,7 @@ PhyParam_t RegionCN470GetPhyParam( GetPhyParams_t* getPhy )
         }
         case PHY_MAX_RX_WINDOW:
         {
-            phyParam.Value = CN470_MAX_RX_WINDOW;	// 监听时间
+            phyParam.Value = CN470_MAX_RX_WINDOW;
             break;
         }
         case PHY_RECEIVE_DELAY1:
@@ -912,9 +912,8 @@ void RegionCN470ComputeRxWindowParameters( int8_t datarate, uint8_t minRxSymbols
 #endif /* REGION_CN470 */
 }
 
-bool RegionCN470RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )    // 设置接收频率，并在日志打印
+bool RegionCN470RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )
 {
-	// 打印 rxConfig 和 datarate
 #if defined( REGION_CN470 )
     int8_t dr = rxConfig->Datarate;
     uint8_t maxPayload = 0;
@@ -927,15 +926,10 @@ bool RegionCN470RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )    // �
     }
 
 #if (defined( REGION_VERSION ) && ( REGION_VERSION == 0x01010003 ))
-    if( rxConfig->RxSlot == RX_SLOT_WIN_1 ) // 接收通道1 则调频
+    if( rxConfig->RxSlot == RX_SLOT_WIN_1 )
     {
         // Apply window 1 frequency
-        frequency = CN470_FIRST_RX1_CHANNEL + ( rxConfig->Channel % 48 ) * CN470_STEPWIDTH_RX1_CHANNEL; // 跳频
-    }
-    else if( rxConfig->RxSlot == RX_SLOT_WIN_2 ) // 接收通道2 则为定频
-    {
-        // Apply window 2 frequency
-        frequency = CN470_RX_WND_2_FREQ;
+        frequency = CN470_FIRST_RX1_CHANNEL + ( rxConfig->Channel % 48 ) * CN470_STEPWIDTH_RX1_CHANNEL;
     }
 #elif (defined( REGION_VERSION ) && ( REGION_VERSION == 0x02010001 ))
     // The RX configuration depends on whether the device has joined or not.
@@ -968,7 +962,7 @@ bool RegionCN470RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )    // �
     Radio.SetChannel( frequency );
 
     // Radio configuration
-    Radio.SetRxConfig( MODEM_LORA, rxConfig->Bandwidth, phyDr, 1, 0, 8, rxConfig->WindowTimeout, false, 0, false, 0, 0, true, rxConfig->RxContinuous );	// 配置接收的config
+    Radio.SetRxConfig( MODEM_LORA, rxConfig->Bandwidth, phyDr, 1, 0, 8, rxConfig->WindowTimeout, false, 0, false, 0, 0, true, rxConfig->RxContinuous );
     /* ST_WORKAROUND_BEGIN: Keep repeater feature */
     if( rxConfig->RepeaterSupport == true )
     {

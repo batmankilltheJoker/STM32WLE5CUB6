@@ -381,7 +381,7 @@ LmHandlerErrorStatus_t LmHandlerConfigure( LmHandlerParams_t *handlerParams )
         while (1) {}  /* error: Region is not defined in the MW */
     }
 
-    if (LoRaMacInitialization(&LoRaMacPrimitives, &LoRaMacCallbacks, LmHandlerParams.ActiveRegion) != LORAMAC_STATUS_OK)	// 配置接收通道
+    if (LoRaMacInitialization(&LoRaMacPrimitives, &LoRaMacCallbacks, LmHandlerParams.ActiveRegion) != LORAMAC_STATUS_OK)
     {
         return LORAMAC_HANDLER_ERROR;
     }

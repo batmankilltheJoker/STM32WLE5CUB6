@@ -92,11 +92,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_LoRaWAN_Init();
+  MX_LoRaWAN_Init();
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	app_lora_init();
+  app_lora_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,7 +104,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    //MX_LoRaWAN_Process();
+    MX_LoRaWAN_Process();
 
     /* USER CODE BEGIN 3 */
 

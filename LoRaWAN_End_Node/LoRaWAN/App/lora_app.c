@@ -400,7 +400,7 @@ void LoRaWAN_Init(void)
   /* Init the Lora Stack*/
   LmHandlerInit(&LmHandlerCallbacks, APP_VERSION);
 
-  LmHandlerConfigure(&LmHandlerParams);	// 配置接收通道
+  LmHandlerConfigure(&LmHandlerParams);
 
   /* USER CODE BEGIN LoRaWAN_Init_2 */
   UTIL_TIMER_Start(&JoinLedTimer);
