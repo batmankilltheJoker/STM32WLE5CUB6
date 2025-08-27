@@ -67,7 +67,7 @@ static void LED_Toggle(void);
  */
 static void OnTxDone(void)
 {
-    HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET); /* LED_GREEN */
+    HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);								 /* LED_GREEN */
     Radio.Standby();                                             // 进入 STANDBY 模式 (Enter STANDBY mode)
     txComplete = true;
     SUBGRF_ClearIrqStatus(IRQ_TX_DONE); // 清除 TX_DONE 中断 (Clear TX_DONE IRQ)
@@ -93,7 +93,7 @@ static void OnTxTimeout(void)
  */
 static void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET); /* LED_BLUE */
+    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin); /* LED_BLUE */
     MW_LOG(TS_OFF, VLEVEL_M, "\r\nreceived packet \"%s\" with Rssi %d , length %d\r\n", payload, rssi, size);
 }
 
@@ -218,7 +218,7 @@ static void LoRa_Send(const char *data, uint8_t size)
     txComplete = false;
     Radio.Standby();            // 确保进入 STANDBY 模式 (Ensure standby mode)
     Radio.Send(txBuffer, size); // Send data
-                                // HAL_Delay(200);
+    HAL_Delay(200);							// 延时发送
 }
 
 // ==================== 主函数 ====================
@@ -234,13 +234,15 @@ void app_lora_init(void)
     LoRa_Init();
     // 等待发送（接收）完成或超时 (Wait for TX（Rx） to complete or timeout)
     uint32_t timeout = 5000; // ms
-    uint32_t start =0; // 存储当前tick
+    uint32_t start = 0; // 存储当前tick
+		uint32_t end = 0;
     while (1)
     {
 #ifdef senddate
         // ======== 1. 生成递增的发送数据 ========
         snprintf(txBuffer1, BUFFER_SIZE, "temperature: %.2f", ReadTemperature());
-        MW_LOG(TS_OFF, VLEVEL_M, "DS18B20 temperature is %.2f\r\n", ReadTemperature());
+				HAL_Delay(1000);	// 给读取温湿度时间
+        // MW_LOG(TS_OFF, VLEVEL_M, "DS18B20 temperature is %.2f\r\n", ReadTemperature());
         uint8_t size = strlen(txBuffer1);
 
         txComplete = false;
@@ -252,8 +254,10 @@ void app_lora_init(void)
         // SysTime_t curtime = SysTimeGet();
         // uint32_t start = curtime.SubSeconds;
         start = HAL_GetTick();
-        while (!txComplete && ( HAL_GetTick() - start) < (timeout / 50))
+				end = HAL_GetTick();
+        while (!txComplete && ( end - start) < (timeout / 50))
         {
+						end = HAL_GetTick();
             // curtime = SysTimeGet();
             Radio.IrqProcess();
             HAL_Delay(10);
@@ -278,8 +282,10 @@ void app_lora_init(void)
         //curtime = SysTimeGet();
         // start = curtime.SubSeconds; // ms级
         start = HAL_GetTick();
-        while ((HAL_GetTick()- start) < (timeout / 50))
+				end = HAL_GetTick();
+        while ((end- start) < (timeout / 50))
         {
+						end = HAL_GetTick();
             // curtime = SysTimeGet();
             Radio.IrqProcess(); // 处理中断（DIO1 触发 OnRxDone）
             HAL_Delay(10);
