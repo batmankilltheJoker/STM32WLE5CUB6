@@ -90,7 +90,7 @@ static void OnTxTimeout(void)
  */
 static void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("\r\nreceived packet \"%s\" with Rssi %d , length %d\r\n",payload,rssi,size);
+    MW_LOG(TS_OFF, VLEVEL_M,"\r\nreceived packet \"%s\" with Rssi %d , length %d\r\n",payload,rssi,size);
 }
 
 /**
@@ -101,7 +101,7 @@ static void OnRxTimeout(void)
 {
     // 可选：超时处理（比如什么都不做）
     // 不翻转 LED
-	printf("onrxtimeout...");
+	MW_LOG(TS_OFF, VLEVEL_M, "onrxtimeout...");
 }
 
 /**
@@ -222,7 +222,7 @@ void app_lora_init(void) {
     while (1) {
         // ======== 1. 生成递增的发送数据 ========
         snprintf(txBuffer1, BUFFER_SIZE, "temperature: %.2f", ReadTemperature());
-		printf("DS18B20 temperature is %.2f\r\n",ReadTemperature());
+		MW_LOG(TS_OFF, VLEVEL_M, "DS18B20 temperature is %.2f\r\n",ReadTemperature());
         uint8_t size = strlen(txBuffer1);
 
         txComplete = false;
@@ -243,10 +243,10 @@ void app_lora_init(void) {
         }
 
         if (!txComplete) {
-            printf("TX Timeout!\n");
+            MW_LOG(TS_OFF, VLEVEL_M, "TX Timeout!\n");
             Radio.Standby();  // 强制退出发送状态 (Force exit TX state)
         } else {
-            printf("TX Done: %s\n", txBuffer);
+            MW_LOG(TS_OFF, VLEVEL_M, "TX Done: %s\n", txBuffer);
         }
 
         // ======== 2. 进入接收模式（5秒） ========

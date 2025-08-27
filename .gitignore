@@ -29,7 +29,7 @@
 !*.bin
 !*.hex
 !**/startup_stm32wle5xx.s
-!**/stm32wle5xx.flash.sct
+!**/stm32wle5xx_flash.sct
 # HAL
 *.log
 
