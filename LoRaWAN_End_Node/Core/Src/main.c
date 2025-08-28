@@ -97,7 +97,7 @@ int main(void)
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	printf("DS18B20 Testing\r\n");
+	// printf("DS18B20 Testing\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,8 +109,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-		printf("DS18B20 temperature is %.2f\r\n",ReadTemperature());
-		HAL_Delay(1000);
+		// printf("DS18B20 temperature is %.2f\r\n",ReadTemperature());
+//		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
