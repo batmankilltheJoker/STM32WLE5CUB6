@@ -37,6 +37,7 @@ void Water_pump_Init(void)
 {
 	HAL_GPIO_WritePin(ON_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(OFF_CTRL_GPIO_Port, OFF_CTRL_Pin, GPIO_PIN_RESET);
+  status_on = false;
 }
 
 /* Start pump: output ON_CTRL pulse (~300 ms) */
@@ -46,6 +47,8 @@ void Water_pump_On(void)
 	HAL_GPIO_WritePin(OFF_CTRL_GPIO_Port, OFF_CTRL_Pin, GPIO_PIN_RESET);
 	HAL_Delay(300); // 0.3s 阻塞延时
 	HAL_GPIO_WritePin(ON_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_RESET);
+
+  status_on = true;
 }
 
 /* Stop pump: output OFF_CTRL pulse (~300 ms) */
@@ -55,6 +58,8 @@ void Water_pump_Off(void)
 	HAL_GPIO_WritePin(ON_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_RESET);
 	HAL_Delay(300); // 0.3s 阻塞延时
 	HAL_GPIO_WritePin(OFF_CTRL_GPIO_Port, OFF_CTRL_Pin, GPIO_PIN_RESET);
+
+  status_on = false;
 }
 
 #endif /* WATERPUMP_DUAL_IO */
@@ -69,6 +74,7 @@ void Water_pump_Init(void)
 {
 	HAL_GPIO_WritePin(ON_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(OFF_CTRL_GPIO_Port, OFF_CTRL_Pin, GPIO_PIN_RESET);
+  status_on = false;
 }
 
 void Water_pump_On(void)
@@ -76,6 +82,8 @@ void Water_pump_On(void)
   HAL_GPIO_WritePin(ON_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_SET);	// Output positive voltage
   HAL_Delay(300);
   HAL_GPIO_WritePin(ON_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_RESET);
+
+  status_on = true;
 }
 
 void Water_pump_Off(void)
@@ -83,6 +91,8 @@ void Water_pump_Off(void)
   HAL_GPIO_WritePin(OFF_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_SET);	// Output negative voltage
   HAL_Delay(300);
   HAL_GPIO_WritePin(OFF_CTRL_GPIO_Port, ON_CTRL_Pin, GPIO_PIN_RESET);
+
+  status_on = false;
 }
 
 #endif /* WATERPUMP_Single_IO */

@@ -3088,11 +3088,11 @@ static void ComputeRxWindowParameters( void )
     MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset;
     MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset;
 
-    if( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE )
-    {
-        MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay1 + MacCtx.RxWindow1Config.WindowOffset;
-        MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay2 + MacCtx.RxWindow2Config.WindowOffset;
-    }
+   if( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE )    // 判断是否入网，未入网：rx1：5s，rx2：6s
+   {
+       MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay1 + MacCtx.RxWindow1Config.WindowOffset;
+       MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay2 + MacCtx.RxWindow2Config.WindowOffset;
+   }
 }
 
 static LoRaMacStatus_t VerifyTxFrame( void )
