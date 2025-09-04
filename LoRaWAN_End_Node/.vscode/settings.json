@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "loramac.h": "c",
-        "sys_app.h": "c"
+        "sys_app.h": "c",
+        "channel_select.h": "c"
     }
 }

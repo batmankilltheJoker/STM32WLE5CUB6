@@ -4034,7 +4034,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
 
     getPhy.Attribute = PHY_DEF_TX_DR;
     phyParam = RegionGetPhyParam( Nvm.MacGroup2.Region, &getPhy );
-    Nvm.MacGroup2.ChannelsDatarateDefault = phyParam.Value;
+    Nvm.MacGroup2.ChannelsDatarateDefault = phyParam.Value; //初始化SF
 
     getPhy.Attribute = PHY_MAX_RX_WINDOW;
     phyParam = RegionGetPhyParam( Nvm.MacGroup2.Region, &getPhy );

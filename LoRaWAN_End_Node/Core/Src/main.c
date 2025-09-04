@@ -25,8 +25,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "sys_app.h"
-#include "ds18b20.h"
 #include "stdio.h"
 /* USER CODE END Includes */
 
@@ -49,7 +47,7 @@
 /* USER CODE BEGIN PV */
 int fputc(int ch,FILE *f)
 {
-	HAL_UART_Transmit(&huart1,(uint8_t *) &ch,1,0xfff);
+	HAL_UART_Transmit(&huart2,(uint8_t *) &ch,1,0xfff);
 	return ch;
 }
 /* USER CODE END PV */
@@ -97,7 +95,6 @@ int main(void)
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	// printf("DS18B20 Testing\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,8 +106,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-		// printf("DS18B20 temperature is %.2f\r\n",ReadTemperature());
-//		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }

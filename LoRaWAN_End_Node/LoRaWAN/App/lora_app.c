@@ -535,28 +535,24 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 static void SendTxData(void)
 {
   /* USER CODE BEGIN SendTxData_1 */
-  LmHandlerErrorStatus_t status = LORAMAC_HANDLER_ERROR;
-  uint8_t batteryLevel = GetBatteryLevel();
-  sensor_t sensor_data;
+  LmHandlerErrorStatus_t status = LORAMAC_HANDLER_ERROR;  // 用于记录是否成功发送
+  uint8_t batteryLevel = GetBatteryLevel(); // VDD
+  float temperature = ReadTemperature();    // temp
   UTIL_TIMER_Time_t nextTxIn = 0;
 
 #ifdef CAYENNE_LPP
   uint8_t channel = 0;
 #else
-  uint16_t pressure = 0;
-  int16_t temperature = 0;
-  uint16_t humidity = 0;
+  uint8_t battery = 100; // 默认电池电量为100
+  uint16_t humidity = 0; /* 如果有湿度传感器，请在此读取并赋值 */
   uint32_t i = 0;
   int32_t latitude = 0;
   int32_t longitude = 0;
   uint16_t altitudeGps = 0;
 #endif /* CAYENNE_LPP */
 
-  EnvSensors_Read(&sensor_data);
-
-  APP_LOG(TS_ON, VLEVEL_M, "VDDA: %d\r\n", batteryLevel);
-  APP_LOG(TS_ON, VLEVEL_M, "temp: %d\r\n", (int16_t)(sensor_data.temperature));
-
+  printf("VDD is %d\r\n",batteryLevel);
+  printf("DS18B20 temperature is %.2f\r\n",temperature);
   AppData.Port = LORAWAN_USER_APP_PORT;
 
 #ifdef CAYENNE_LPP
@@ -575,40 +571,46 @@ static void SendTxData(void)
   CayenneLppCopy(AppData.Buffer);
   AppData.BufferSize = CayenneLppGetSize();
 #else  /* not CAYENNE_LPP */
-  humidity    = (uint16_t)(sensor_data.humidity * 10);            /* in %*10     */
-  temperature = (int16_t)(sensor_data.temperature);
-  pressure = (uint16_t)(sensor_data.pressure * 100 / 10); /* in hPa / 10 */
+  /* 将 float 温度转换为 centi-degrees 的整数，避免对 float 使用位移操作导致编译错误 */
+  int16_t temp_centi = (int16_t)(temperature * 100.0f); /* e.g. 23.45 -> 2345 */
+  uint16_t hum_centi = (uint16_t)(humidity * 100u);     /* 若有真实湿度值请先赋给 humidity */
 
-  AppData.Buffer[i++] = AppLedStateOn;
-  AppData.Buffer[i++] = (uint8_t)((pressure >> 8) & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)(pressure & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)(temperature & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)((humidity >> 8) & 0xFF);
-  AppData.Buffer[i++] = (uint8_t)(humidity & 0xFF);
+  /* 4) 填充 AppData.Buffer 按 网关 parseMultiSensor 要求的顺序：
+    * [0..1] temperature (signed, centi-deg)  -> ((b0<<8)|b1)/100
+    * [2..3] humidity    (unsigned, centi-%)  -> ((b2<<8)|b3)/100
+    * [4]    battery (0..254)
+    * [5]    status
+    */
+  AppData.Buffer[i++] = (uint8_t)((temp_centi >> 8) & 0xFF);
+  AppData.Buffer[i++] = (uint8_t)( temp_centi        & 0xFF);
+  AppData.Buffer[i++] = (uint8_t)((hum_centi  >> 8) & 0xFF);
+  AppData.Buffer[i++] = (uint8_t)( hum_centi         & 0xFF);
+  AppData.Buffer[i++] = battery;
+  AppData.Buffer[i++] = 0;  // status，保留字段，暂填0
 
-  if ((LmHandlerParams.ActiveRegion == LORAMAC_REGION_US915) || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AU915)
-      || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AS923))
-  {
-    AppData.Buffer[i++] = 0;
-    AppData.Buffer[i++] = 0;
-    AppData.Buffer[i++] = 0;
-    AppData.Buffer[i++] = 0;
-  }
-  else
-  {
-    latitude = sensor_data.latitude;
-    longitude = sensor_data.longitude;
+  // if ((LmHandlerParams.ActiveRegion == LORAMAC_REGION_US915) || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AU915)
+  //     || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AS923))
+  // {
+  //   AppData.Buffer[i++] = 0;
+  //   AppData.Buffer[i++] = 0;
+  //   AppData.Buffer[i++] = 0;
+  //   AppData.Buffer[i++] = 0;
+  // }
+  // else
+  // {
+  //   latitude = sensor_data.latitude;
+  //   longitude = sensor_data.longitude;
 
-    AppData.Buffer[i++] = GetBatteryLevel();        /* 1 (very low) to 254 (fully charged) */
-    AppData.Buffer[i++] = (uint8_t)((latitude >> 16) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((latitude >> 8) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)(latitude & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((longitude >> 16) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((longitude >> 8) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)(longitude & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)((altitudeGps >> 8) & 0xFF);
-    AppData.Buffer[i++] = (uint8_t)(altitudeGps & 0xFF);
-  }
+  //   AppData.Buffer[i++] = GetBatteryLevel();        /* 1 (very low) to 254 (fully charged) */
+  //   AppData.Buffer[i++] = (uint8_t)((latitude >> 16) & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)((latitude >> 8) & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)(latitude & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)((longitude >> 16) & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)((longitude >> 8) & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)(longitude & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)((altitudeGps >> 8) & 0xFF);
+  //   AppData.Buffer[i++] = (uint8_t)(altitudeGps & 0xFF);
+  // }
 
   AppData.BufferSize = i;
 #endif /* CAYENNE_LPP */
@@ -619,7 +621,7 @@ static void SendTxData(void)
     HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_GREEN */
   }
 
-  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // 进行发�??
+  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // 进行发送
   if (LORAMAC_HANDLER_SUCCESS == status)
   {
     APP_LOG(TS_ON, VLEVEL_L, "SEND REQUEST\r\n");

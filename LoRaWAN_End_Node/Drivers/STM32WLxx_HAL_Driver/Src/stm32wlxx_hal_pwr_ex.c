@@ -766,7 +766,7 @@ HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
       /* Clear any previous config. Keep it clear if no event or IT mode is selected */
       __HAL_PWR_PVM3_EXTI_DISABLE_EVENT();
       __HAL_PWR_PVM3_EXTI_DISABLE_IT();
-      
+
       __HAL_PWR_PVM3_EXTI_DISABLE_FALLING_EDGE();
       __HAL_PWR_PVM3_EXTI_DISABLE_RISING_EDGE();
 
@@ -1050,7 +1050,7 @@ void HAL_PWREx_EnterSTOP2Mode(uint8_t STOPEntry)
   if (STOPEntry == PWR_STOPENTRY_WFI)
   {
     /* Request Wait For Interrupt */
-    __WFI();
+    //__WFI();
   }
   else
   {

@@ -1,4 +1,5 @@
 ！！！最初编译可能会报错，需要手动添加BSP！！！
+！！！此代码是基于LoRawan_End_Node上修改，仅实现透传功能，没有关注代码的结构与其他。可以参考SubGHz_Phy_PingPong(后续上传)
 
 1. 与HTCC-AB02开发板(arduino开发)实现透传温湿度数据，可自行更改透传数据。(arduino收)
 2. 重定义的printf 是串口1

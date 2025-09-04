@@ -30,6 +30,7 @@
 !*.hex
 !**/startup_stm32wle5xx.s
 !**/stm32wle5xx_flash.sct
+
 # HAL
 *.log
 
@@ -44,3 +45,6 @@ JLinkSettings.ini
 *.zip
 *.docx
 
+#文件夹
+LoRaWAN_AT_Slave/
+SubGHz_Phy_PingPong/

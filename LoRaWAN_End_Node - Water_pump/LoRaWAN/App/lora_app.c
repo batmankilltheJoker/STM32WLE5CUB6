@@ -619,7 +619,7 @@ static void SendTxData(void)
     HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_RED */
   }
 
-  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // 进行发�??
+  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // 进行坑�??
   if (LORAMAC_HANDLER_SUCCESS == status)
   {
     APP_LOG(TS_ON, VLEVEL_L, "SEND REQUEST\r\n");
