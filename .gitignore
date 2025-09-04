@@ -48,3 +48,4 @@ JLinkSettings.ini
 #文件夹
 LoRaWAN_AT_Slave/
 SubGHz_Phy_PingPong/
+ADC_report/
