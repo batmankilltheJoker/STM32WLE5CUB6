@@ -7,12 +7,13 @@
  */
 
 /* Water pump control module API */
-
+#include <stdbool.h>
 //#define WATERPUMP_DUAL_IO
 #define WATERPUMP_Single_IO
 
 /* Record valve status */
-volatile static status_on = false;
+
+volatile static bool status_on = false;
 /*
  * Purpose: Initialize water pump control GPIOs.
  * Behavior: Drive both ON_CTRL and OFF_CTRL low to enter a safe idle state.

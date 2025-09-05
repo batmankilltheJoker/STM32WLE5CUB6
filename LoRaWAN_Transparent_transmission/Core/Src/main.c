@@ -107,9 +107,6 @@ int main(void)
     MX_LoRaWAN_Process();
 
     /* USER CODE BEGIN 3 */
-
-		//printf("DS18B20 temperature is %.2f\r\n",ReadTemperature());
-		//HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
