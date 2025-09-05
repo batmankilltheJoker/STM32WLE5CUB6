@@ -1006,14 +1006,14 @@ bool RegionCN470TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
 
     // Setup the radio frequency
 //    Radio.SetChannel( RegionNvmGroup2->Channels[txConfig->Channel].Frequency );
-		uint32_t freq;
-		const char *name;
-		// Setup the radio frequency
-		if (plc_get_tx_channel(&freq, &name) == 0)
-		{
-			RegionNvmGroup2->Channels[txConfig->Channel].Frequency = freq;
-			Radio.SetChannel( RegionNvmGroup2->Channels[txConfig->Channel].Frequency );
-		}
+    uint32_t freq;
+    const char *name;
+    // Setup the radio frequency
+    if (plc_get_tx_channel(&freq, &name) == 0)
+    {
+        RegionNvmGroup2->Channels[txConfig->Channel].Frequency = freq;
+        Radio.SetChannel( RegionNvmGroup2->Channels[txConfig->Channel].Frequency );
+    }
 
     Radio.SetTxConfig( MODEM_LORA, phyTxPower, 0, bandwidth, phyDr, 1, 8, false, true, 0, 0, false, 4000 );
     /* ST_WORKAROUND_BEGIN: Print Tx config */
