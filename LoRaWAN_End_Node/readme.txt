@@ -34,6 +34,7 @@
 
 7. lora_app.h中，修改LORAWAN_DEFAULT_CONFIRMED_MSG_STATE，决定是否启用 confirmed message
 
+8.	lorawan_conf.h 中 将 HYBRID_ENABLED 的宏定义修改为1
 现存bug
 	1. 与网关的发送信道无法对接
 	2. 当收到入网请求同意后，代码运行将会停止（至少看起来是，闪灯任务停止，日志打印停止，也没有消息上传）

@@ -4113,7 +4113,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     params.Type = INIT_TYPE_DEFAULTS;
     params.NvmGroup1 = &Nvm.RegionGroup1;
     params.NvmGroup2 = &Nvm.RegionGroup2;
-    RegionInitDefaults( Nvm.MacGroup2.Region, &params );
+    RegionInitDefaults( Nvm.MacGroup2.Region, &params );    // 启用所有通道
 #elif ( defined( LORAMAC_VERSION ) && ( LORAMAC_VERSION == 0x01000400 ))
     // FPort 224 is enabled by default.
     Nvm.MacGroup2.IsCertPortOn = true;

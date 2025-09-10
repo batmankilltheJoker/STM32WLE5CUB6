@@ -11,25 +11,25 @@
 #include <stdint.h>
 /* ================================================== Tx ================================================================= */
 /* Radio base frequencies */
-#define PLC_RADIO0_FREQ_HZ 471700000u
-#define PLC_RADIO1_FREQ_HZ 475000000u
+#define PLC_RADIO0_FREQ_HZ 470700000u
+#define PLC_RADIO1_FREQ_HZ 471300000u
 
 /* Offsets (Hz) from JSON: chan_multiSF_0..3 and chan_multiSF_4..7 */
-#define PLC_CH_IF_0 (-300000)
-#define PLC_CH_IF_1 (-100000)
-#define PLC_CH_IF_2 (100000)
-#define PLC_CH_IF_3 (300000)
+#define PLC_CH_IF_0 (-400000)
+#define PLC_CH_IF_1 (-200000)
+#define PLC_CH_IF_2 (200000)
+#define PLC_CH_IF_3 (400000)
 
 /* Computed absolute RX frequencies (Hz) */
-#define PLC_CH0_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_0) /* 471400000 */
-#define PLC_CH1_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_1) /* 471600000 */
-#define PLC_CH2_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_2) /* 471800000 */
-#define PLC_CH3_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_3) /* 472000000 */
+#define PLC_CH0_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_0)
+#define PLC_CH1_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_1)
+#define PLC_CH2_FREQ_HZ (PLC_RADIO0_FREQ_HZ)
+#define PLC_CH3_FREQ_HZ (PLC_RADIO0_FREQ_HZ + PLC_CH_IF_2)
 
-#define PLC_CH4_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_0) /* 474700000 */
-#define PLC_CH5_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_1) /* 474900000 */
-#define PLC_CH6_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_2) /* 475100000 */
-#define PLC_CH7_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_3) /* 475300000 */
+#define PLC_CH4_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_1)
+#define PLC_CH5_FREQ_HZ (PLC_RADIO1_FREQ_HZ)
+#define PLC_CH6_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_2)
+#define PLC_CH7_FREQ_HZ (PLC_RADIO1_FREQ_HZ + PLC_CH_IF_3)
 
 /* Additional explicit channels from JSON */
 #define PLC_CH_LORA_STD_FREQ_HZ (PLC_RADIO1_FREQ_HZ - 200000) /* 474800000 */
@@ -67,14 +67,14 @@ static const char* PLC_CHANNEL_NAMES[10] = {
 
 /* ================================================== Rx ================================================================= */
 /* RX channel frequencies provided (converted from 5014..5053 style -> Hz) */
-#define PLC_RX_CH0_FREQ_HZ 501400000u /* 501.4 MHz */
-#define PLC_RX_CH1_FREQ_HZ 501600000u /* 501.6 MHz */
-#define PLC_RX_CH2_FREQ_HZ 501800000u /* 501.8 MHz */
-#define PLC_RX_CH3_FREQ_HZ 502000000u /* 502.0 MHz */
-#define PLC_RX_CH4_FREQ_HZ 504700000u /* 504.7 MHz */
-#define PLC_RX_CH5_FREQ_HZ 504900000u /* 504.9 MHz */
-#define PLC_RX_CH6_FREQ_HZ 505100000u /* 505.1 MHz */
-#define PLC_RX_CH7_FREQ_HZ 505300000u /* 505.3 MHz */
+#define PLC_RX_CH0_FREQ_HZ 500300000u /* 501.4 MHz */
+#define PLC_RX_CH1_FREQ_HZ 500500000u /* 501.6 MHz */
+#define PLC_RX_CH2_FREQ_HZ 500700000u /* 501.8 MHz */
+#define PLC_RX_CH3_FREQ_HZ 500900000u /* 502.0 MHz */
+#define PLC_RX_CH4_FREQ_HZ 501100000u /* 504.7 MHz */
+#define PLC_RX_CH5_FREQ_HZ 501300000u /* 504.9 MHz */
+#define PLC_RX_CH6_FREQ_HZ 501500000u /* 505.1 MHz */
+#define PLC_RX_CH7_FREQ_HZ 501700000u /* 505.3 MHz */
 
 /* RX channel arrays */
 static const uint32_t PLC_RX_CHANNEL_FREQS_HZ[] = {
