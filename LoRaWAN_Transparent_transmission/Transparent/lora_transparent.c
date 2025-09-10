@@ -154,10 +154,7 @@ static void LoRa_Init(void)
 
     // 验证写入（可选）(Optional: verify write)
     uint8_t check = SUBGRF_ReadRegister(0x0740);
-//		// 读取芯片类型寄存器（只读）
-//		uint8_t chipId = SX126xReadRegister(0x00C0);  // 型号
-//		uint8_t hwId   = SX126xReadRegister(0x00C1);  // 硬件 ID
-//		uint8_t fwId   = SX126xReadRegister(0x00C2);  // 固件 ID
+
 #ifdef senddate
     // 配置发送参数 (Configure TX parameters)
     Radio.SetTxConfig(

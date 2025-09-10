@@ -20,13 +20,13 @@
 #include "main.h"
 #include "app_lorawan.h"
 #include "tim.h"
-#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lora_transparent.h"
 #include "stdio.h"
+uint8_t Uart2aRxBuffer[BUF_SIZE] = 0;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,11 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-int fputc(int ch,FILE *f)	// ÷ÿ∂®“Âpintf
-{
-	HAL_UART_Transmit(&huart1,(uint8_t *) &ch,1,0xfff);
-	return ch;
-}
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,7 +57,11 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int fputc(int ch,FILE *f)
+{
+	HAL_UART_Transmit(&huart2,(uint8_t *) &ch,1,0xfff);
+	return ch;
+}
 /* USER CODE END 0 */
 
 /**
@@ -94,9 +94,10 @@ int main(void)
   MX_GPIO_Init();
   MX_LoRaWAN_Init();
   MX_TIM17_Init();
-  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+	MX_USART2_UART_Init();
   app_lora_init();
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2,(uint8_t *)&Uart2aRxBuffer,BUF_SIZE);
   /* USER CODE END 2 */
 
   /* Infinite loop */

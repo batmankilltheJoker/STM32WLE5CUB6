@@ -22,6 +22,7 @@
 #include "stm32wlxx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,6 +59,7 @@
 extern RTC_HandleTypeDef hrtc;
 extern SUBGHZ_HandleTypeDef hsubghz;
 extern DMA_HandleTypeDef hdma_usart2_tx;
+extern DMA_HandleTypeDef hdma_usart2_rx;
 extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
@@ -243,6 +245,20 @@ void DMA1_Channel5_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles DMA1 Channel 6 Interrupt.
+  */
+void DMA1_Channel6_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel6_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel6_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart2_rx);
+  /* USER CODE BEGIN DMA1_Channel6_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel6_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART2 Interrupt.
   */
 void USART2_IRQHandler(void)
@@ -252,7 +268,7 @@ void USART2_IRQHandler(void)
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
-
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart2,(uint8_t *)&Uart2aRxBuffer,BUF_SIZE);
   /* USER CODE END USART2_IRQn 1 */
 }
 

@@ -32,15 +32,14 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern UART_HandleTypeDef huart1;
-
 extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
-
+#define BUF_SIZE 100
+extern uint8_t Uart2_rx_buffer[BUF_SIZE + 1];//创建接收缓存，大小为BUF_SIZF
+extern uint8_t Uart2aRxBuffer[BUF_SIZE];
 /* USER CODE END Private defines */
 
-void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
