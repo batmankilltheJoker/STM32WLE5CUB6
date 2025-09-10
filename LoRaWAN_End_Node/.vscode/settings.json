@@ -2,6 +2,7 @@
     "files.associations": {
         "loramac.h": "c",
         "sys_app.h": "c",
-        "channel_select.h": "c"
+        "channel_select.h": "c",
+        "regioncn470.h": "c"
     }
 }
