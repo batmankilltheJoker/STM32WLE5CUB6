@@ -112,7 +112,7 @@ extern "C" {
 /*!
  * Device address on the network (big endian)
  */
-#define LORAWAN_DEVICE_ADDRESS                             ( uint32_t )0x0100000A
+#define LORAWAN_DEVICE_ADDRESS                             ( uint32_t )0x007E6AE1
 
 /*!
  * Application root key
@@ -127,12 +127,12 @@ extern "C" {
 /*!
  * Forwarding Network session key
  */
-#define LORAWAN_NWK_S_KEY                                  2B,7E,15,16,28,AE,D2,A6,AB,F7,15,88,09,CF,4F,3C
+#define LORAWAN_NWK_S_KEY                                  15,B1,D0,EF,A4,63,DF,BE,3D,11,18,1E,1E,C7,DA,85
 
 /*!
  * Application session key
  */
-#define LORAWAN_APP_S_KEY                                  2B,7E,15,16,28,AE,D2,A6,AB,F7,15,88,09,CF,4F,3C
+#define LORAWAN_APP_S_KEY                                  D7,2C,78,75,8C,DC,CA,BF,55,EE,4A,77,8D,16,EF,67
 
 /*!
  * Format commissioning keys

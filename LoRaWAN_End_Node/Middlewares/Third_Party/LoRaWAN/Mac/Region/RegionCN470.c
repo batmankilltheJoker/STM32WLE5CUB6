@@ -49,10 +49,6 @@
 #include "RegionCN470B26.h"
 #endif /* REGION_VERSION */
 
-/* USER CODE BEGIN Includes */
-#include "channel_select.h"
-/* USER CODE END Includes */
-
 // Definitions
 #define CHANNELS_MASK_SIZE              6
 
@@ -923,7 +919,7 @@ bool RegionCN470RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )
     uint8_t maxPayload = 0;
     int8_t phyDr = 0;
     uint32_t frequency = rxConfig->Frequency;
-    const char *name;
+
     if( Radio.GetStatus( ) != RF_IDLE )
     {
         return false;
@@ -933,13 +929,7 @@ bool RegionCN470RxConfig( RxConfigParams_t* rxConfig, int8_t* datarate )
     if( rxConfig->RxSlot == RX_SLOT_WIN_1 )
     {
         // Apply window 1 frequency
-        frequency = CN470_FIRST_RX1_CHANNEL + ( rxConfig->Channel % 48 ) * CN470_STEPWIDTH_RX1_CHANNEL; // 接收频率计算
-/***************************************************************************************/
-
-        // plc_get_rx_channel(&frequency, &name);  // 以发送频率为准计算接收频率
-
-/***************************************************************************************/
-
+        frequency = CN470_FIRST_RX1_CHANNEL + ( rxConfig->Channel % 48 ) * CN470_STEPWIDTH_RX1_CHANNEL;
     }
 #elif (defined( REGION_VERSION ) && ( REGION_VERSION == 0x02010001 ))
     // The RX configuration depends on whether the device has joined or not.
@@ -1009,19 +999,9 @@ bool RegionCN470TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
     phyTxPower = RegionCommonComputeTxPower( txPowerLimited, txConfig->MaxEirp, txConfig->AntennaGain );
 
     // Setup the radio frequency
-   Radio.SetChannel( RegionNvmGroup2->Channels[txConfig->Channel].Frequency );
-/***************************************************************************************/
-    // uint32_t freq;
-    // const char *name;
-    // // Setup the radio frequency
-    // if (plc_get_tx_channel(&freq, &name) == 0)
-    // {
-    //     RegionNvmGroup2->Channels[txConfig->Channel].Frequency = freq;
-    //     Radio.SetChannel( RegionNvmGroup2->Channels[txConfig->Channel].Frequency );
-    // }
-/***************************************************************************************/
-    Radio.SetTxConfig( MODEM_LORA, phyTxPower, 0, bandwidth, phyDr, 1, 8, false, true, 0, 0, false, 4000 );
+    Radio.SetChannel( RegionNvmGroup2->Channels[txConfig->Channel].Frequency );
 
+    Radio.SetTxConfig( MODEM_LORA, phyTxPower, 0, bandwidth, phyDr, 1, 8, false, true, 0, 0, false, 4000 );
     /* ST_WORKAROUND_BEGIN: Print Tx config */
     RegionCommonTxConfigPrint(RegionNvmGroup2->Channels[txConfig->Channel].Frequency, txConfig->Datarate);
     /* ST_WORKAROUND_END */

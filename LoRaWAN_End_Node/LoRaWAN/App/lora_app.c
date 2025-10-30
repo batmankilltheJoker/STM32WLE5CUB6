@@ -535,7 +535,7 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 static void SendTxData(void)
 {
   /* USER CODE BEGIN SendTxData_1 */
-  LmHandlerErrorStatus_t status = LORAMAC_HANDLER_ERROR;  // 用于记录是否成功发送
+  LmHandlerErrorStatus_t status = LORAMAC_HANDLER_ERROR;  // ??????????
   uint8_t batteryLevel = GetBatteryLevel(); // VDD
   float temperature = ReadTemperature();    // temp
   UTIL_TIMER_Time_t nextTxIn = 0;
@@ -543,8 +543,8 @@ static void SendTxData(void)
 #ifdef CAYENNE_LPP
   uint8_t channel = 0;
 #else
-  uint8_t battery = 100; // 默认电池电量为100
-  uint16_t humidity = 0; /* 如果有湿度传感器，请在此读取并赋值 */
+  uint8_t battery = 100; // ???????100
+  uint16_t humidity = 0; /* ????????????????? */
   uint32_t i = 0;
   int32_t latitude = 0;
   int32_t longitude = 0;
@@ -571,11 +571,11 @@ static void SendTxData(void)
   CayenneLppCopy(AppData.Buffer);
   AppData.BufferSize = CayenneLppGetSize();
 #else  /* not CAYENNE_LPP */
-  /* 将 float 温度转换为 centi-degrees 的整数，避免对 float 使用位移操作导致编译错误 */
+  /* ? float ????? centi-degrees ??????? float ???????????? */
   int16_t temp_centi = (int16_t)(temperature * 100.0f); /* e.g. 23.45 -> 2345 */
-  uint16_t hum_centi = (uint16_t)(humidity * 100u);     /* 若有真实湿度值请先赋给 humidity */
+  uint16_t hum_centi = (uint16_t)(humidity * 100u);     /* ??????????? humidity */
 
-  /* 4) 填充 AppData.Buffer 按 网关 parseMultiSensor 要求的顺序：
+  /* 4) ?? AppData.Buffer ? ?? parseMultiSensor ??????
     * [0..1] temperature (signed, centi-deg)  -> ((b0<<8)|b1)/100
     * [2..3] humidity    (unsigned, centi-%)  -> ((b2<<8)|b3)/100
     * [4]    battery (0..254)
@@ -586,7 +586,7 @@ static void SendTxData(void)
   AppData.Buffer[i++] = (uint8_t)((hum_centi  >> 8) & 0xFF);
   AppData.Buffer[i++] = (uint8_t)( hum_centi         & 0xFF);
   AppData.Buffer[i++] = battery;
-  AppData.Buffer[i++] = 0;  // status，保留字段，暂填0
+  AppData.Buffer[i++] = 0;  // status????????0
 
   // if ((LmHandlerParams.ActiveRegion == LORAMAC_REGION_US915) || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AU915)
   //     || (LmHandlerParams.ActiveRegion == LORAMAC_REGION_AS923))
@@ -621,7 +621,7 @@ static void SendTxData(void)
     HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_GREEN */
   }
 
-  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // 进行发送
+  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // ????
   if (LORAMAC_HANDLER_SUCCESS == status)
   {
     APP_LOG(TS_ON, VLEVEL_L, "SEND REQUEST\r\n");

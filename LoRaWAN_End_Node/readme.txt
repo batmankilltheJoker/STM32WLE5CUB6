@@ -16,6 +16,6 @@
 2. 重定义的printf 是串口1
 3. se-identity.h文件中可修改：DEVICE_EUI、JOIN_EUI、APP_KEY、NWK_KEY等参数
 4. RegionCN470.h文件中可修改：SF、 TX_POWER、BW等参数
-5. channel_select.h文件中可修改关于中心频段与其偏移的参数，
-6. lora_app.h中，修改LORAWAN_DEFAULT_CONFIRMED_MSG_STATE，决定是否启用 confirmed message
+5. lora_app.h中，修改LORAWAN_DEFAULT_CONFIRMED_MSG_STATE，决定是否启用 confirmed message
+6. LoRaMacInterfaces.h中有许多参数，诸如节点类型，发射率、ADR、信道掩码等
 

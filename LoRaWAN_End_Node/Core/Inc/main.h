@@ -73,6 +73,10 @@ void Error_Handler(void);
 #define USARTx_TX_GPIO_Port GPIOA
 #define USARTx_RX_Pin GPIO_PIN_3
 #define USARTx_RX_GPIO_Port GPIOA
+#define PA8_Pin GPIO_PIN_8
+#define PA8_GPIO_Port GPIOA
+#define PA9_Pin GPIO_PIN_9
+#define PA9_GPIO_Port GPIOA
 #define DS18B20_Pin GPIO_PIN_10
 #define DS18B20_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

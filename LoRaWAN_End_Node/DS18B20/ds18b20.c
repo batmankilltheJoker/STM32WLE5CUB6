@@ -27,11 +27,11 @@ void INPUT_INIT_CONFIG()
 void Init_DS18B20(void)
 {
 	  OUTPUT_INIT_CONFIG();
-		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET); 
+		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET);
 		delay_us(3);
-		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_RESET); 
+		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_RESET);
 		delay_us(750);
-		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET); 
+		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET);
 		delay_us(40);
 	  INPUT_INIT_CONFIG();
 		if(HAL_GPIO_ReadPin(DS18B20_GPIO_Port,DS18B20_Pin)==GPIO_PIN_SET)
@@ -39,7 +39,7 @@ void Init_DS18B20(void)
 			HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_RESET);//led灯指示
 			delay_us(10);
 		}
-		else 
+		else
 		{
 			 OUTPUT_INIT_CONFIG();
 			delay_us(480);
@@ -52,12 +52,12 @@ void Init_DS18B20(void)
 //读取一个一个数据（字节）
 uint8_t ReadOneChar(void)
 {
-		unsigned char i=0; 
+		unsigned char i=0;
 		uint8_t dat=0;
-		for (i=8;i>0;i--) 
+		for (i=8;i>0;i--)
 		{
 			OUTPUT_INIT_CONFIG();
-			HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET); 
+			HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_SET);
 			delay_us(3);
 			HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_RESET);
 			delay_us(3);
@@ -75,8 +75,8 @@ uint8_t ReadOneChar(void)
 void WriteOneChar(unsigned char dat)
 {
 	OUTPUT_INIT_CONFIG();
-	unsigned char i=0; 
-	for(i=8;i>0;i--) 
+	unsigned char i=0;
+	for(i=8;i>0;i--)
 	{
 		HAL_GPIO_WritePin(DS18B20_GPIO_Port,DS18B20_Pin,GPIO_PIN_RESET);
 		delay_us(15);
@@ -94,26 +94,26 @@ void WriteOneChar(unsigned char dat)
 double ReadTemperature(void)
 {
 	double mdata = 0;
-	uint8_t tempL=0,tempH=0; 	
- 	
-	Init_DS18B20(); 
-	WriteOneChar(0xcc); 
-	WriteOneChar(0x44); 
+	uint8_t tempL=0,tempH=0;
+
+	Init_DS18B20();
+	WriteOneChar(0xcc);
+	WriteOneChar(0x44);
 	delay_us(500);
-	Init_DS18B20(); 
-	WriteOneChar(0xcc); 
-	WriteOneChar(0xbe); 
+	Init_DS18B20();
+	WriteOneChar(0xcc);
+	WriteOneChar(0xbe);
 	tempL=ReadOneChar(); //低字节
 	tempH=ReadOneChar(); //高字节
-	if(tempH>0x7f) 
+	if(tempH>0x7f)
 	{
-		tempL=~tempL; 
+		tempL=~tempL;
 		tempH=~tempH+1;
-		fg=1; 
+		fg=1;
 	}
 	else
 		fg=0;
-	mdata = tempL/16.0+tempH*16; 
+	mdata = tempL/16.0+tempH*16;
 	if(fg==1)
 	{
 		mdata=-mdata;

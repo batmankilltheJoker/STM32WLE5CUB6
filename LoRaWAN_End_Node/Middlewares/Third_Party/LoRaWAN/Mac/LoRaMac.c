@@ -3088,11 +3088,11 @@ static void ComputeRxWindowParameters( void )
     MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.ReceiveDelay1 + MacCtx.RxWindow1Config.WindowOffset;
     MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.ReceiveDelay2 + MacCtx.RxWindow2Config.WindowOffset;
 
-   if( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE )    // 判断是否入网，未入网：rx1：5s，rx2：6s
-   {
-       MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay1 + MacCtx.RxWindow1Config.WindowOffset;
-       MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay2 + MacCtx.RxWindow2Config.WindowOffset;
-   }
+    if( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_NONE )
+    {
+        MacCtx.RxWindow1Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay1 + MacCtx.RxWindow1Config.WindowOffset;
+        MacCtx.RxWindow2Delay = Nvm.MacGroup2.MacParams.JoinAcceptDelay2 + MacCtx.RxWindow2Config.WindowOffset;
+    }
 }
 
 static LoRaMacStatus_t VerifyTxFrame( void )
@@ -4034,7 +4034,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
 
     getPhy.Attribute = PHY_DEF_TX_DR;
     phyParam = RegionGetPhyParam( Nvm.MacGroup2.Region, &getPhy );
-    Nvm.MacGroup2.ChannelsDatarateDefault = phyParam.Value; //初始化SF
+    Nvm.MacGroup2.ChannelsDatarateDefault = phyParam.Value;
 
     getPhy.Attribute = PHY_MAX_RX_WINDOW;
     phyParam = RegionGetPhyParam( Nvm.MacGroup2.Region, &getPhy );
@@ -4113,7 +4113,7 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
     params.Type = INIT_TYPE_DEFAULTS;
     params.NvmGroup1 = &Nvm.RegionGroup1;
     params.NvmGroup2 = &Nvm.RegionGroup2;
-    RegionInitDefaults( Nvm.MacGroup2.Region, &params );    // 启用所有通道
+    RegionInitDefaults( Nvm.MacGroup2.Region, &params );
 #elif ( defined( LORAMAC_VERSION ) && ( LORAMAC_VERSION == 0x01000400 ))
     // FPort 224 is enabled by default.
     Nvm.MacGroup2.IsCertPortOn = true;
