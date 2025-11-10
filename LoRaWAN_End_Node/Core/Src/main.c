@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "ds18b20.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,8 +96,12 @@ int main(void)
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	HAL_GPIO_WritePin(PA8_GPIO_Port, PA8_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(PA9_GPIO_Port, PA9_Pin, GPIO_PIN_SET);
+  MX_SUBGHZ_Init();
+//	HAL_GPIO_WritePin(PA8_GPIO_Port, PA8_Pin, GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(PA9_GPIO_Port, PA9_Pin, GPIO_PIN_SET);
+//	double temperature = 0;    // temp
+//	temperature = ReadTemperature();
+//	HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin); /* LED_GREEN */
   /* USER CODE END 2 */
 
   /* Infinite loop */

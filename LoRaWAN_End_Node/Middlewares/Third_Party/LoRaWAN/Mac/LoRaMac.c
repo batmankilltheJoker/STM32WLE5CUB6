@@ -3615,10 +3615,10 @@ static LoRaMacStatus_t SendFrameOnChannel( uint8_t channel )
     MacCtx.McpsConfirm.NbTrans = MacCtx.ChannelsNbTransCounter;
     MacCtx.ResponseTimeoutStartTime = 0;
 #endif /* LORAMAC_VERSION */
-
+    MW_LOG(TS_ON, VLEVEL_M, "SUBGZ Status: %d\r\n", Radio.GetStatus());
     // Send now
     Radio.Send( MacCtx.PktBuffer, MacCtx.PktBufferLen );
-
+	MW_LOG(TS_ON, VLEVEL_M, "SUBGZ Status: %d\r\n", Radio.GetStatus());
     return LORAMAC_STATUS_OK;
 }
 

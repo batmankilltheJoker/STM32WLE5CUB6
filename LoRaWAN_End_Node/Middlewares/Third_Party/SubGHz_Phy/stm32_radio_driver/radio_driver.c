@@ -554,6 +554,8 @@ void SUBGRF_CalibrateImage( uint32_t freq )
 
 void SUBGRF_SetPaConfig( uint8_t paDutyCycle, uint8_t hpMax, uint8_t deviceSel, uint8_t paLut )
 {
+    MW_LOG(TS_ON, VLEVEL_M, "PaCfg: duty=0x%02X hpMax=0x%02X dev=0x%02X lut=0x%02X\r\n",
+        paDutyCycle, hpMax, deviceSel, paLut);
     uint8_t buf[4];
 
     buf[0] = paDutyCycle;
@@ -644,7 +646,12 @@ void SUBGRF_SetTxParams( uint8_t paSelect, int8_t power, RadioRampTimes_t rampTi
 {
     uint8_t buf[2];
     int32_t max_power;
-
+    MW_LOG(TS_ON, VLEVEL_M, "TxParams: pa=%s regPower=0x%02X ramp=%d us\r\n",
+        (paSelect==RFO_HP)?"HP":"LP",(uint8_t)power,
+        (rampTime==RADIO_RAMP_10_US)?10:(rampTime==RADIO_RAMP_20_US)?20:
+        (rampTime==RADIO_RAMP_40_US)?40:(rampTime==RADIO_RAMP_80_US)?80:
+        (rampTime==RADIO_RAMP_200_US)?200:(rampTime==RADIO_RAMP_800_US)?800:
+        (rampTime==RADIO_RAMP_1700_US)?1700:3400);
     if (paSelect == RFO_LP)
     {
         max_power = RBI_GetRFOMaxPowerConfig(RBI_RFO_LP_MAXPOWER);
@@ -1071,28 +1078,37 @@ uint8_t SUBGRF_SetRfTxPower( int8_t power )
             if (power > 15)
             {
                 paSelect = RFO_HP;
+                MW_LOG(TS_ON, VLEVEL_M, "RFO_HP, req=%d dBm\r\n",power);
             }
             else
             {
                 paSelect = RFO_LP;
+                MW_LOG(TS_ON, VLEVEL_M, "RFO_LP, req=%d dBm\r\n",power);
             }
             break;
         }
         case RBI_CONF_RFO_LP:
         {
             paSelect = RFO_LP;
+            MW_LOG(TS_ON, VLEVEL_M, "RFO_LP, req=%d dBm\r\n",power);
             break;
         }
         case RBI_CONF_RFO_HP:
         {
             paSelect = RFO_HP;
+            MW_LOG(TS_ON, VLEVEL_M, "RFO_HP, req=%d dBm\r\n",power);
             break;
         }
         default:
             break;
     }
 
-    SUBGRF_SetTxParams( paSelect, power, RADIO_RAMP_40_US );
+//    RadioRampTimes_t ramp = RADIO_RAMP_40_US;
+//    if (power >= 21)      ramp = RADIO_RAMP_200_US;
+//    else if (power >=18)  ramp = RADIO_RAMP_80_US;
+//    else                  ramp = RADIO_RAMP_40_US;
+
+    SUBGRF_SetTxParams(paSelect, power, RADIO_RAMP_200_US);
 
     return paSelect;
 }

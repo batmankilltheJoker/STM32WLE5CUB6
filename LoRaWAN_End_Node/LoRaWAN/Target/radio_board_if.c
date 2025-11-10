@@ -216,7 +216,9 @@ int32_t RBI_IsDCDC(void)
 int32_t RBI_GetRFOMaxPowerConfig(RBI_RFOMaxPowerConfig_TypeDef Config)
 {
   /* USER CODE BEGIN RBI_GetRFOMaxPowerConfig_1 */
-
+//  if (Config == RBI_RFO_LP_MAXPOWER) return 15;   // LP 上限
+//  if (Config == RBI_RFO_HP_MAXPOWER) return 14;   // 等效禁用 HP
+//  return 14;
   /* USER CODE END RBI_GetRFOMaxPowerConfig_1 */
 #if defined(USE_BSP_DRIVER)
   /* Important note: BSP code is board dependent

@@ -683,7 +683,7 @@ static void RadioInit( RadioEvents_t *events )
     SUBGRF_SetRegulatorMode( );
 
     SUBGRF_SetBufferBaseAddress( 0x00, 0x00 );
-    SUBGRF_SetTxParams( RFO_LP, 0, RADIO_RAMP_200_US );
+    SUBGRF_SetTxParams( RFO_HP, 0, RADIO_RAMP_200_US );
     SUBGRF_SetDioIrqParams( IRQ_RADIO_ALL, IRQ_RADIO_ALL, IRQ_RADIO_NONE, IRQ_RADIO_NONE );
 
     /* ST_WORKAROUND_BEGIN: Sleep radio */
@@ -1288,6 +1288,7 @@ static void RadioSend( uint8_t *buffer, uint8_t size )
     {
         SUBGRF_WriteRegister( SUBGHZ_SDCFG0R, SUBGRF_ReadRegister( SUBGHZ_SDCFG0R ) | ( 1 << 2 ) );
     }
+
     /* WORKAROUND END */
     switch( SubgRf.Modem )
     {
@@ -1634,7 +1635,7 @@ static void RadioIrqProcess( void )
 
         if( ( RadioEvents != NULL ) && ( RadioEvents->TxDone != NULL ) )
         {
-            RadioEvents->TxDone( );
+            RadioEvents->TxDone( ); // LoRaMAC TxDone callback
         }
         break;
 

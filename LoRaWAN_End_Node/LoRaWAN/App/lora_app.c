@@ -460,8 +460,6 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
 
   if (params != NULL)
   {
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET); /* LED_BLUE */
-
     UTIL_TIMER_Start(&RxLedTimer);
 
     if (params->IsMcpsIndication)
@@ -506,12 +504,10 @@ static void OnRxData(LmHandlerAppData_t *appData, LmHandlerRxParams_t *params)
                 if (AppLedStateOn == RESET)
                 {
                   APP_LOG(TS_OFF, VLEVEL_H, "LED OFF\r\n");
-                  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_GREEN */
                 }
                 else
                 {
                   APP_LOG(TS_OFF, VLEVEL_H, "LED ON\r\n");
-                  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET); /* LED_GREEN */
                 }
               }
               break;
@@ -617,11 +613,9 @@ static void SendTxData(void)
 
   if ((JoinLedTimer.IsRunning) && (LmHandlerJoinStatus() == LORAMAC_HANDLER_SET))
   {
-    UTIL_TIMER_Stop(&JoinLedTimer);
-    HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_GREEN */
-  }
+    UTIL_TIMER_Stop(&JoinLedTimer);  }
 
-  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false); // ????
+  status = LmHandlerSend(&AppData, LmHandlerParams.IsTxConfirmed, false);
   if (LORAMAC_HANDLER_SUCCESS == status)
   {
     APP_LOG(TS_ON, VLEVEL_L, "SEND REQUEST\r\n");
@@ -662,18 +656,17 @@ static void OnTxTimerEvent(void *context)
 /* USER CODE BEGIN PrFD_LedEvents */
 static void OnTxTimerLedEvent(void *context)
 {
-  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET); /* LED_YELLOW */
+
 }
 
 static void OnRxTimerLedEvent(void *context)
 {
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET); /* LED_BLUE */
+
 }
 
 static void OnJoinTimerLedEvent(void *context)
 {
 
-  HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin); /* LED_GREEN */
 }
 
 /* USER CODE END PrFD_LedEvents */
@@ -686,7 +679,6 @@ static void OnTxData(LmHandlerTxParams_t *params)
     /* Process Tx event only if its a mcps response to prevent some internal events (mlme) */
     if (params->IsMcpsConfirm != 0)
     {
-      HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET); /* LED_YELLOW */
       UTIL_TIMER_Start(&TxLedTimer);
 
       APP_LOG(TS_OFF, VLEVEL_M, "\r\n###### ========== MCPS-Confirm =============\r\n");
@@ -715,7 +707,6 @@ static void OnJoinRequest(LmHandlerJoinParams_t *joinParams)
     if (joinParams->Status == LORAMAC_HANDLER_SUCCESS)
     {
       UTIL_TIMER_Stop(&JoinLedTimer);
-      HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_GREEN */
 
       APP_LOG(TS_OFF, VLEVEL_M, "\r\n###### = JOINED = ");
       if (joinParams->Mode == ACTIVATION_TYPE_ABP)
@@ -850,9 +841,7 @@ static void OnSystemReset(void)
 static void StopJoin(void)
 {
   /* USER CODE BEGIN StopJoin_1 */
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET); /* LED_BLUE */
-  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET); /* LED_YELLOW */
-  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET); /* LED_GREEN */
+
   /* USER CODE END StopJoin_1 */
 
   UTIL_TIMER_Stop(&TxTimer);
@@ -894,9 +883,7 @@ static void OnStopJoinTimerEvent(void *context)
     UTIL_SEQ_SetTask((1 << CFG_SEQ_Task_LoRaStopJoinEvent), CFG_SEQ_Prio_0);
   }
   /* USER CODE BEGIN OnStopJoinTimerEvent_Last */
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET); /* LED_BLUE */
-  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET); /* LED_YELLOW */
-  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET); /* LED_GREEN */
+
   /* USER CODE END OnStopJoinTimerEvent_Last */
 }
 
